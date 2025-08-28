@@ -3,10 +3,19 @@
 A Python application that:  
 - Logs into Gmail using OAuth 2.0  
 - Retrieves credit card bill emails from your inbox  
+```mermaid
+flowchart TD
+   A[Person **1** Gmail Inbox]
+    B[Person **n** Gmail Inbox]
+    A -->|**gmail** auto-forward logic| C 
+    B -->|**gmail** auto-forward logic| C[Joint Gmail Inbox]
+    C -->|**github action** initiates api log-in| D["`bill-breaker reads emails`"]
+    D -->|captures email sender, date, body text, cash amount| E[(Self-hosted cloud db)]
+
+```
 - Generates a monthly expense spreadsheet  
 - Splits costs between people  
 - Sends each person their cost breakdown via email
-
 ---
 
 ## Features
