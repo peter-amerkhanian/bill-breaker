@@ -7,13 +7,14 @@ from googleapiclient.discovery import build, Resource
 
 # SCOPES defines the level of access to gmail.
 # If modifying SCOPES, delete the token.json file to re-authenticate
-SCOPES = ['https://www.googleapis.com/auth/gmail.readonly']
+SCOPES = ["https://www.googleapis.com/auth/gmail.readonly"]
+
 
 def get_gmail_service() -> Resource:
     """Authenticate user and return Gmail API service instance."""
     creds: Credentials | None = None
-    token_path = 'token.json'
-    creds_path = 'credentials.json'
+    token_path = "token.json"
+    creds_path = "credentials.json"
     # Load saved token.json if available
     if os.path.exists(token_path):
         creds: Credentials = Credentials.from_authorized_user_file(token_path, SCOPES)
@@ -22,11 +23,13 @@ def get_gmail_service() -> Resource:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow: InstalledAppFlow = InstalledAppFlow.from_client_secrets_file(creds_path, SCOPES)
+            flow: InstalledAppFlow = InstalledAppFlow.from_client_secrets_file(
+                creds_path, SCOPES
+            )
             creds: Credentials = flow.run_local_server(port=0)
         # Save token.json for future use
-        with open(token_path, 'w') as token_file:
+        with open(token_path, "w") as token_file:
             token_file.write(creds.to_json())
     # Build Gmail service
-    service: Resource = build('gmail', 'v1', credentials=creds)
+    service: Resource = build("gmail", "v1", credentials=creds)
     return service

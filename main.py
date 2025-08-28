@@ -9,7 +9,6 @@ def fetch_latest_emails(service, max_results=10):
     if not messages:
         print("No messages found.")
         return []
-
     email_data = []
     for msg in messages:
         msg_detail = service.users().messages().get(userId='me', id=msg['id']).execute()
@@ -25,7 +24,6 @@ def fetch_latest_emails(service, max_results=10):
             'body': msg_body,
             'amounts': parse_email.extract_amounts(msg_body)
         })
-
     return email_data
 
 
