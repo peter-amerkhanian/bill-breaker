@@ -1,22 +1,25 @@
 # Gmail Bill Splitter
 
+## Current structure
 A Python application that:  
 - Logs into Gmail using OAuth 2.0  
 - Retrieves credit card bill emails from your inbox  
+```mermaid
+flowchart TD
+   A[Person **1** Gmail Inbox]
+    B[Person **n** Gmail Inbox]
+    A -->|**gmail** auto-forward logic| C 
+    B -->|**gmail** auto-forward logic| C[Joint Gmail Inbox]
+    D["`bill-breaker reads emails`"] -->|1.**github action** initiates api log-in| C
+    C -->|2.**bill-breaker** retrieves emails via api| D["`bill-breaker parses emails`"]
+    D -->|writes out email sender, date, body text, cash amount| E[(Self-hosted cloud db)]
+
+```
+### Next Steps:
 - Generates a monthly expense spreadsheet  
 - Splits costs between people  
 - Sends each person their cost breakdown via email
 
----
-
-## Features
-- Secure OAuth authentication with Google  
-- Fetch emails using the Gmail API  
-- Extract billing information from email bodies  
-- Generate a summary spreadsheet (CSV or Excel)  
-- Email cost breakdowns to recipients
-
----
 
 ## Google API Setup
 
@@ -36,5 +39,3 @@ A Python application that:
    - App type: **Desktop app**  
    - Download the file as `credentials.json`  
    - Save it in your project root (same folder as `main.py`)  
-
-More forthcoming...

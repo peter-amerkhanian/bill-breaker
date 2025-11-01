@@ -50,6 +50,7 @@ def parse_email_body(service: Resource, id: str) -> str:
     return text
 
 
-def extract_amounts(text: str) -> List[str]:
-    pattern = r"\$(?:[1-9]\d{0,2}(?:,\d{3})*|0)(?:\.\d{2})?"
+def extract_amounts(text: str) -> list[str]:
+    pattern = r"\$\d+(?:,\d{3})*(?:\.\d{2})?"
     return re.findall(pattern, text)
+
