@@ -4,6 +4,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build, Resource
+from google.auth.exceptions import RefreshError
 
 # SCOPES defines the level of access to gmail.
 # If modifying SCOPES, delete the token.json file to re-authenticate
@@ -21,7 +22,16 @@ def get_gmail_service() -> Resource:
     # If no valid token.json, go through OAuth flow using your credentials.json
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            creds.refresh(Request())
+            try:
+                creds.refresh(Request())
+            except RefreshError:
+                # Refresh token is invalid → delete and re-auth
+                if os.path.exists(token_path):
+                    os.remove(token_path)
+                flow: InstalledAppFlow  = InstalledAppFlow.from_client_secrets_file(
+                    creds_path, SCOPES
+                )
+                creds = flow.run_local_server(port=0)
         else:
             flow: InstalledAppFlow = InstalledAppFlow.from_client_secrets_file(
                 creds_path, SCOPES
