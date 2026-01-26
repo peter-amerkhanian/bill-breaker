@@ -103,6 +103,9 @@ if __name__ == "__main__":
     service = gmail_con.get_gmail_service()
     emails = fetch_latest_emails(service, max_results=10)
     emails_df = pd.DataFrame(emails)
+    emails_df["raw_date"] = pd.to_datetime(emails_df["raw_date"], utc=True).dt.tz_convert(None)
+    emails_df["year_month"] = emails_df["raw_date"].dt.to_period("M")
+    emails_df['cap_one_credit'] = emails_df['subject'].str.contains(r"\$\d+(?:,\d{3})*(?:\.\d{2})?")
     os.makedirs("data", exist_ok=True)
     emails_df.to_csv("data/test_output.csv", index=False)
     # Debug print
